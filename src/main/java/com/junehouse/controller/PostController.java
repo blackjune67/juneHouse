@@ -21,9 +21,10 @@ public class PostController {
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreate params, BindingResult result) {
-        log.info("params = " + params.toString());
-        if(result.hasErrors()) {
+    public Map<String, String> post(@RequestBody @Valid PostCreate params) {
+
+        // * 데이터 검증
+        /*if(result.hasErrors()) {
             List<FieldError> fieldErrors = result.getFieldErrors();
             FieldError fieldError = fieldErrors.get(0);
             String field = fieldError.getField();
@@ -32,7 +33,7 @@ public class PostController {
             HashMap<String, String> error = new HashMap<>();
             error.put(field, defaultMessage);
             return error;
-        }
+        }*/
         return Map.of();
 //        return new HashMap<>();
     }

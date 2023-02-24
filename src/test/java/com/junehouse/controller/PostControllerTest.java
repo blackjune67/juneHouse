@@ -28,6 +28,7 @@ class PostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    // * MockMVC 한글 깨짐 처리
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -65,8 +66,9 @@ class PostControllerTest {
                         .param("title", "글 제목 테스트")
                         .param("content", "글 내용 테스트")*/
                 )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("제목은 필수입니다!"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
 //                .andExpect(content().string("hello"))
                 .andDo(print());
     }

@@ -14,6 +14,6 @@ public class PostCreate {
 
     @NotBlank(message = "제목은 필수입니다!")
     public String title;
-    @NotBlank
+    @NotBlank(message = "내용은 필수입니다!")
     public String content;
 }

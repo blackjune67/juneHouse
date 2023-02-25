@@ -39,6 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -69,10 +72,7 @@ class PostControllerTest {
                 .content("내용입니다.")
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(request);
-
-        System.out.println("json = " + json);
 
         // expected
         mockMvc.perform(
@@ -91,13 +91,17 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 title값 필수!")
     void test2() throws Exception {
+        //given
+        PostCreate request = PostCreate.builder()
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
         mockMvc.perform(
                         post("/posts")
                                 .contentType(APPLICATION_JSON)
-                                .content("{\"title\" : null, \"content\": \"내용입니다.\"}")
-                        /*.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("title", "글 제목 테스트")
-                        .param("content", "글 내용 테스트")*/
+                                .content(json)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
@@ -108,11 +112,19 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
+        //given
+        PostCreate request = PostCreate.builder()
+                .title("지각 더럽게 많이하는 여자친구")
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
         //when 언제
         mockMvc.perform(
                         post("/posts")
                                 .contentType(APPLICATION_JSON)
-                                .content("{\"title\" : \"지각 더럽게 많이하는 여자친구\", \"content\": \"내용입니다.\"}")
+                                .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());

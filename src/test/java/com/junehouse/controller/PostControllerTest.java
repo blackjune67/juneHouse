@@ -1,9 +1,13 @@
 package com.junehouse.controller;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
+import com.junehouse.request.PostCreate;
 import com.junehouse.service.PostService;
 import org.aspectj.lang.annotation.Before;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,7 +44,6 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    // * MockMVC 한글 깨짐 처리
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -48,6 +52,7 @@ class PostControllerTest {
         postRepository.deleteAll();
     }
 
+    // * MockMVC 한글 깨짐 처리
     @BeforeEach
     public void setMockMvc() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -58,10 +63,22 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청")
     void test() throws Exception {
+        //given
+        PostCreate request = PostCreate.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(request);
+
+        System.out.println("json = " + json);
+
+        // expected
         mockMvc.perform(
                         post("/posts")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"title\" : \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                                .contentType(APPLICATION_JSON)
+                                .content(json)
                         /*.contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", "글 제목 테스트")
                         .param("content", "글 내용 테스트")*/
@@ -76,7 +93,7 @@ class PostControllerTest {
     void test2() throws Exception {
         mockMvc.perform(
                         post("/posts")
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
                                 .content("{\"title\" : null, \"content\": \"내용입니다.\"}")
                         /*.contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", "글 제목 테스트")
@@ -85,16 +102,16 @@ class PostControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-//                .andExpect(content().string("hello"))
                 .andDo(print());
     }
+
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
         //when 언제
         mockMvc.perform(
                         post("/posts")
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
                                 .content("{\"title\" : \"지각 더럽게 많이하는 여자친구\", \"content\": \"내용입니다.\"}")
                 )
                 .andExpect(status().isOk())

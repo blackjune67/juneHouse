@@ -1,5 +1,6 @@
 package com.junehouse.controller;
 
+import com.junehouse.domain.Post;
 import com.junehouse.request.PostCreate;
 import com.junehouse.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,11 @@ public class PostController {
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreate request) {
+    public void post(@RequestBody @Valid PostCreate request) {
+        // * CASE_1 : 저장한 데이터 Entity -> response로 응답하기
+        // * CASE_2 : 저장한 데이터의 primary_id -> response로 응답하기
+        // * CASE_3 : 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 관리함.
         postService.write(request);
-        return Map.of();
+//        return Map.of();
     }
 }

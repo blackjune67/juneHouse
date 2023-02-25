@@ -84,7 +84,7 @@ class PostControllerTest {
                         .param("content", "글 내용 테스트")*/
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
+                .andExpect(content().string(""))
                 .andDo(print());
     }
 

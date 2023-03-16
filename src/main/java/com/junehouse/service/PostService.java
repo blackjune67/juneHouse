@@ -51,6 +51,7 @@ public class PostService {
         postRepository.save(post);
     }
 
+    // * 서비스 정책에 맞는 응답 클래스 분리
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));

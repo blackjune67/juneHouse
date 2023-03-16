@@ -51,10 +51,12 @@ class PostServiceTest {
     void test2() {
         //given
         Post postBuild = Post.builder()
-                .title("글작성")
-                .content("내용내용")
+                .title("1234567891011121314")
+                .content("10자 이상이라면?")
                 .build();
         postRepository.save(postBuild);
+
+        // 클라이언트 요구사항 = title 길이 10제한이라면??
 
         //when
         Post post = postService.get(postBuild.getId());
@@ -62,7 +64,7 @@ class PostServiceTest {
         //then null 이면 안된다
         assertNotNull(post);
         assertEquals(1L, postRepository.count());
-        assertEquals("글작성", post.getTitle());
-        assertEquals("내용내용", post.getContent());
+        assertEquals("1234567891011121314", post.getTitle());
+        assertEquals("10자 이상이라면?", post.getContent());
     }
 }

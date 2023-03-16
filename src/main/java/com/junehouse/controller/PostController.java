@@ -2,6 +2,7 @@ package com.junehouse.controller;
 
 import com.junehouse.domain.Post;
 import com.junehouse.request.PostCreate;
+import com.junehouse.response.PostResponse;
 import com.junehouse.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id) {
-        return postService.get(id);
+    public PostResponse get(@PathVariable(name = "postId") Long id) {
+        PostResponse postResponse = postService.get(id);
+        return postResponse;
     }
 }

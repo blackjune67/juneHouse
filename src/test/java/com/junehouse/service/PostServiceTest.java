@@ -3,6 +3,7 @@ package com.junehouse.service;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import com.junehouse.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,12 +60,12 @@ class PostServiceTest {
         // 클라이언트 요구사항 = title 길이 10제한이라면??
 
         //when
-        Post post = postService.get(postBuild.getId());
+        PostResponse post = postService.get(postBuild.getId());
 
         //then null 이면 안된다
         assertNotNull(post);
         assertEquals(1L, postRepository.count());
-        assertEquals("1234567891011121314", post.getTitle());
+        assertEquals("1234567891", post.getTitle());
         assertEquals("10자 이상이라면?", post.getContent());
     }
 }

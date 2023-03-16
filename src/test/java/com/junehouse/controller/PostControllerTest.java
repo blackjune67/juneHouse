@@ -140,21 +140,18 @@ class PostControllerTest {
     void test4() throws Exception {
         //given
         Post post = Post.builder()
-                .title("글작성")
-                .content("내용내용1")
+                .title("1234567891012345")
+                .content("bar")
                 .build();
-
         postRepository.save(post);
 
         //when + then
-        mockMvc.perform(
-                        get("/posts/{postId}", post.getId())
-                                .contentType(APPLICATION_JSON)
-                )
-                .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.title").value("글작성"))
-                .andExpect(jsonPath("$.content").value("내용내용1"))
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("1234567891"))
+                .andExpect(jsonPath("$.content").value("bar"))
                 .andDo(print());
     }
 }

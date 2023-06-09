@@ -66,21 +66,8 @@ public class PostService {
 
     public List<PostResponse> getList() {
 
-        // ! stream builder를 통해서 할 수 있으나 반복적인 작업 유발
-//        return postRepository.findAll().stream()
-//                .map(post -> PostResponse.builder()
-//                        .id(post.getId())
-//                        .title(post.getTitle())
-//                        .content(post.getContent())
-//                        .build())
-//                .collect(Collectors.toList());
-
         return postRepository.findAll().stream()
-                .map(post -> PostResponse.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .build())
+                .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
 }

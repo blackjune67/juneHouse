@@ -75,19 +75,16 @@ class PostServiceTest {
     @DisplayName("글 여러개 조회")
     void test3() {
         //given
-        Post postBuild = Post.builder()
-                .title("글한개")
-                .content("ㅅㄱㅇ")
-                .build();
-        postRepository.save(postBuild);
-
-        Post postBuild2 = Post.builder()
-                .title("글두개")
-                .content("ㅎㅇㅎㅇ")
-                .build();
-        postRepository.save(postBuild2);
-
-        // 클라이언트 요구사항 = title 길이 10제한이라면??
+        postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("글한개")
+                        .content("ㅅㄱㅇ")
+                        .build(),
+                Post.builder()
+                        .title("글두개")
+                        .content("ㅎㅇㅎㅇ")
+                        .build()
+        ));
 
         //when
         List<PostResponse> posts = postService.getList();

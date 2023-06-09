@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -67,5 +69,30 @@ class PostServiceTest {
         assertEquals(1L, postRepository.count());
         assertEquals("1234567891", post.getTitle());
         assertEquals("10자 이상이라면?", post.getContent());
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test3() {
+        //given
+        Post postBuild = Post.builder()
+                .title("글한개")
+                .content("ㅅㄱㅇ")
+                .build();
+        postRepository.save(postBuild);
+
+        Post postBuild2 = Post.builder()
+                .title("글두개")
+                .content("ㅎㅇㅎㅇ")
+                .build();
+        postRepository.save(postBuild2);
+
+        // 클라이언트 요구사항 = title 길이 10제한이라면??
+
+        //when
+        List<PostResponse> posts = postService.getList();
+
+        //then 리스트 조회
+        assertEquals(2L, posts.size());
     }
 }

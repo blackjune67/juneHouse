@@ -15,6 +15,9 @@ public class PostResponse {
     private final String title;
     private final String content;
 
+    /*
+    * 제목이 열 글자 제한을 둔 서비스 정책
+    * */
     @Builder
     public PostResponse(Long id, String title, String content) {
         this.id = id;

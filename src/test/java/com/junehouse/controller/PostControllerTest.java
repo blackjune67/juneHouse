@@ -1,36 +1,26 @@
 package com.junehouse.controller;
 
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
-import com.junehouse.service.PostService;
-import org.aspectj.lang.annotation.Before;
-import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 //@WebMvcTest
@@ -150,8 +140,37 @@ class PostControllerTest {
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.title").value("1234567891"))
+                .andExpect(jsonPath("$.title").value("123456789"))
                 .andExpect(jsonPath("$.content").value("bar"))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test5() throws Exception {
+        //given
+        Post post1 = Post.builder()
+                .title("제목1")
+                .content("게시글1")
+                .build();
+        postRepository.save(post1);
+
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("게시글2")
+                .build();
+        postRepository.save(post2);
+
+        //when + then
+        mockMvc.perform(get("/posts")
+                                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("제목1"))
+                .andExpect(jsonPath("$[0].content").value("게시글1"))
+                .andDo(print());
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.junehouse.request.PostCreate;
 import com.junehouse.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,23 +65,11 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList() {
+    public List<PostResponse> getList(Pageable pageable) {
+//        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
 
-        // ! stream builder를 통해서 할 수 있으나 반복적인 작업 유발
-//        return postRepository.findAll().stream()
-//                .map(post -> PostResponse.builder()
-//                        .id(post.getId())
-//                        .title(post.getTitle())
-//                        .content(post.getContent())
-//                        .build())
-//                .collect(Collectors.toList());
-
-        return postRepository.findAll().stream()
-                .map(post -> PostResponse.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .build())
+        return postRepository.findAll(pageable).stream()
+                .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
 }

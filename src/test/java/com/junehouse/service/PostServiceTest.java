@@ -9,12 +9,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -71,28 +76,61 @@ class PostServiceTest {
         assertEquals("10자 이상이라면?", post.getContent());
     }
 
-    @Test
+    /*@Test
     @DisplayName("글 여러개 조회")
     void test3() {
         //given
-        Post postBuild = Post.builder()
-                .title("글한개")
-                .content("ㅅㄱㅇ")
-                .build();
-        postRepository.save(postBuild);
-
-        Post postBuild2 = Post.builder()
-                .title("글두개")
-                .content("ㅎㅇㅎㅇ")
-                .build();
-        postRepository.save(postBuild2);
-
-        // 클라이언트 요구사항 = title 길이 10제한이라면??
+        postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("글한개")
+                        .content("ㅅㄱㅇ")
+                        .build(),
+                Post.builder()
+                        .title("글두개")
+                        .content("ㅎㅇㅎㅇ")
+                        .build()
+        ));
 
         //when
-        List<PostResponse> posts = postService.getList();
+        List<PostResponse> posts = postService.getList(1);
 
         //then 리스트 조회
         assertEquals(2L, posts.size());
+    }*/
+
+    @Test
+    @DisplayName("글 1page 조회")
+    void test4() {
+        // select, limit, offset
+        //given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("글쓰기 테스트 " + i)
+                                .content("재밌는 내용 " + i)
+                                .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
+       /* postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("글한개")
+                        .content("ㅅㄱㅇ")
+                        .build(),
+                Post.builder()
+                        .title("글두개")
+                        .content("ㅎㅇㅎㅇ")
+                        .build()
+        ));*/
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+
+        //when
+        List<PostResponse> posts = postService.getList(pageable);
+
+        //then 리스트 조회
+        assertEquals(10L, posts.size());
+        assertEquals("글쓰기 테스트 30", posts.get(0).getTitle());
+        assertEquals("글쓰기 테스트 21", posts.get(9).getTitle());
+
     }
 }

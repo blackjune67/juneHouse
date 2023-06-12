@@ -6,6 +6,7 @@ import com.junehouse.request.PostCreate;
 import com.junehouse.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,9 +65,10 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList() {
+    public List<PostResponse> getList(Pageable pageable) {
+//        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
 
-        return postRepository.findAll().stream()
+        return postRepository.findAll(pageable).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

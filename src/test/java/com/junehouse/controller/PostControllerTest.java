@@ -16,6 +16,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -149,29 +153,25 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
         //given
-        Post post1 = postRepository.save(
-                Post.builder()
-                        .title("제목1")
-                        .content("게시글1")
-                        .build());
-
-        Post post2 = postRepository.save(
-                Post.builder()
-                        .title("제목2")
-                        .content("게시글2")
-                        .build());
-
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("글쓰기 테스트 " + i)
+                                .content("재밌는 내용 " + i)
+                                .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
         //when + then
-        mockMvc.perform(get("/posts")
+        mockMvc.perform(get("/posts?page=0&sort=id,desc")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", Matchers.is(2)))
-                .andExpect(jsonPath("$[0].id").value(post1.getId()))
-                .andExpect(jsonPath("$[0].title").value("제목1"))
-                .andExpect(jsonPath("$[0].content").value("게시글1"))
-                .andExpect(jsonPath("$[1].id").value(post2.getId()))
-                .andExpect(jsonPath("$[1].title").value("제목2"))
-                .andExpect(jsonPath("$[1].content").value("게시글2"))
+                .andExpect(jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].title").value("글쓰기 테스트 30"))
+                .andExpect(jsonPath("$[0].content").value("재밌는 내용 30"))
+//                .andExpect(jsonPath("$[1].id").value(post2.getId()))
+//                .andExpect(jsonPath("$[1].title").value("제목2"))
+//                .andExpect(jsonPath("$[1].content").value("게시글2"))
                 .andDo(print());
     }
 

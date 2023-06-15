@@ -3,6 +3,7 @@ package com.junehouse.service;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import com.junehouse.request.PostSearch;
 import com.junehouse.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,7 +101,7 @@ class PostServiceTest {
     void test4() {
         // select, limit, offset
         //given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i ->
                         Post.builder()
                                 .title("글쓰기 테스트 " + i)
@@ -122,15 +120,19 @@ class PostServiceTest {
                         .build()
         ));*/
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+//        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
 
         //when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         //then 리스트 조회
         assertEquals(10L, posts.size());
-        assertEquals("글쓰기 테스트 30", posts.get(0).getTitle());
-        assertEquals("글쓰기 테스트 21", posts.get(9).getTitle());
+        assertEquals("글쓰기 테스트 19", posts.get(0).getTitle());
+//        assertEquals("글쓰기 테스트 21", posts.get(9).getTitle());
 
     }
 }

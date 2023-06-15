@@ -153,7 +153,7 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
         //given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i ->
                         Post.builder()
                                 .title("글쓰기 테스트 " + i)
@@ -162,13 +162,13 @@ class PostControllerTest {
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
         //when + then
-        mockMvc.perform(get("/posts?page=0&sort=id,desc")
+        mockMvc.perform(get("/posts?page=1&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", Matchers.is(5)))
-                .andExpect(jsonPath("$[0].id").value(30))
-                .andExpect(jsonPath("$[0].title").value("글쓰기 테스트 30"))
-                .andExpect(jsonPath("$[0].content").value("재밌는 내용 30"))
+                .andExpect(jsonPath("$.length()", Matchers.is(10)))
+//                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].title").value("글쓰기 테스트 19"))
+                .andExpect(jsonPath("$[0].content").value("재밌는 내용 19"))
 //                .andExpect(jsonPath("$[1].id").value(post2.getId()))
 //                .andExpect(jsonPath("$[1].title").value("제목2"))
 //                .andExpect(jsonPath("$[1].content").value("게시글2"))

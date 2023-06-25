@@ -3,6 +3,7 @@ package com.junehouse.service;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
 import com.junehouse.response.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +72,9 @@ public class PostService {
         return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    public void edite(Long id, PostEdit postEdit) {
+
     }
 }

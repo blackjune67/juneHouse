@@ -25,8 +25,15 @@ public class Post {
         this.title = title;
         this.content = content;
     }
-/*
-    public String getTitle() {
-        return this.title;
-    }*/
+
+    public PostEditor.PostEditorBuilder toEditor() {
+        return PostEditor.builder()
+                .title(title)
+                .content(content);
+    }
+
+    public void edit(PostEditor postEditor) {
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
+    }
 }

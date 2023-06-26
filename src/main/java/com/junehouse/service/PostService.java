@@ -1,7 +1,6 @@
 package com.junehouse.service;
 
 import com.junehouse.domain.Post;
-import com.junehouse.domain.PostEditor;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
@@ -81,26 +80,21 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-        PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
-
-        /*if(postEdit.getTitle() != null) {
-            postEditorBuilder
-                    .title(postEdit.getTitle());
-        }
-
-        if(postEdit.getContent() != null) {
-            postEditorBuilder
-                    .content(postEdit.getContent());
-        }*/
+        // * 방법 1
+//        PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
 
         // * 해당 기능만 사용할 수 있게끔 한다.
-        PostEditor postEditor = postEditorBuilder
-                .title(postEdit.getTitle())
-                .content(postEdit.getContent())
-                .build();
+//        PostEditor postEditor = postEditorBuilder
+//                .title(postEdit.getTitle())
+//                .content(postEdit.getContent())
+//                .build();
 
-        post.edit(postEditorBuilder.build());
+//        post.edit(postEditor);
 
+        // * 방법 2
+        post.edit2(postEdit.getTitle(), postEdit.getContent());
+
+        // * responseBody 전달하려고 함.
         return new PostResponse(post);
     }
 }

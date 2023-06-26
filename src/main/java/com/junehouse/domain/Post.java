@@ -26,6 +26,7 @@ public class Post {
         this.content = content;
     }
 
+    // * 방법 1
     public PostEditor.PostEditorBuilder toEditor() {
         return PostEditor.builder()
                 .title(title)
@@ -35,5 +36,11 @@ public class Post {
     public void edit(PostEditor postEditor) {
         title = postEditor.getTitle();
         content = postEditor.getContent();
+    }
+    // -----------------------------------------------
+
+    public void edit2(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

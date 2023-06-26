@@ -3,6 +3,7 @@ package com.junehouse.service;
 import com.junehouse.domain.Post;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
 import com.junehouse.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,7 +99,7 @@ class PostServiceTest {
 
     @Test
     @DisplayName("글 1page 조회")
-    void test4() {
+    void test3() {
         // select, limit, offset
         //given
         List<Post> requestPosts = IntStream.range(0, 20)
@@ -134,5 +135,31 @@ class PostServiceTest {
         assertEquals("글쓰기 테스트 19", posts.get(0).getTitle());
 //        assertEquals("글쓰기 테스트 21", posts.get(9).getTitle());
 
+    }
+
+    @Test
+    @DisplayName("글 수정")
+    void test4() {
+        //given
+        Post post = Post.builder()
+                .title("아이폰")
+                .content("애플비젼")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("안드로이드")
+                .content("안드로이드 비젼")
+                .build();
+
+        //when
+        postService.edit(post.getId(), postEdit);
+
+        //then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+
+//        assertEquals("안드로이드", changePost.getTitle());
+        assertEquals("안드로이드 비젼", changePost.getContent());
     }
 }

@@ -1,14 +1,17 @@
 package com.junehouse.service;
 
 import com.junehouse.domain.Post;
+import com.junehouse.domain.PostEditor;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
 import com.junehouse.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,5 +74,31 @@ public class PostService {
         return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void edit(Long id, PostEdit postEdit) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
+
+        /*if(postEdit.getTitle() != null) {
+            postEditorBuilder
+                    .title(postEdit.getTitle());
+        }
+
+        if(postEdit.getContent() != null) {
+            postEditorBuilder
+                    .content(postEdit.getContent());
+        }*/
+
+        // * 해당 기능만 사용할 수 있게끔 한다.
+        PostEditor postEditor = postEditorBuilder
+                .title(postEdit.getTitle())
+                .content(postEdit.getContent())
+                .build();
+
+        post.edit(postEditorBuilder.build());
     }
 }

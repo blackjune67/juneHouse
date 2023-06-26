@@ -1,6 +1,7 @@
 package com.junehouse.controller;
 
 import com.junehouse.request.PostCreate;
+import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
 import com.junehouse.response.PostResponse;
 import com.junehouse.service.PostService;
@@ -40,5 +41,9 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
+    @PatchMapping("/posts/{postId}")
+    public PostResponse edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        return postService.edit(postId, request);
+    }
 
 }

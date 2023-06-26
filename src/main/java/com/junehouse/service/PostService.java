@@ -77,7 +77,7 @@ public class PostService {
     }
 
     @Transactional
-    public void edit(Long id, PostEdit postEdit) {
+    public PostResponse edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
@@ -100,5 +100,7 @@ public class PostService {
                 .build();
 
         post.edit(postEditorBuilder.build());
+
+        return new PostResponse(post);
     }
 }

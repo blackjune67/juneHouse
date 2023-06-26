@@ -10,7 +10,7 @@ public class PostEditor {
 
     @Builder
     public PostEditor(String title, String content) {
-        this.title = title;
+        this.title = title != null ? title : this.getTitle();
         this.content = content;
     }
 }

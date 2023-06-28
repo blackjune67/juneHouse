@@ -77,21 +77,12 @@ public class PostService {
     }
 
     @Transactional
-    public void edit(Long id, PostEdit postEdit) {
+    public PostResponse edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
+        // * 방법 1
         PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
-
-        /*if(postEdit.getTitle() != null) {
-            postEditorBuilder
-                    .title(postEdit.getTitle());
-        }
-
-        if(postEdit.getContent() != null) {
-            postEditorBuilder
-                    .content(postEdit.getContent());
-        }*/
 
         // * 해당 기능만 사용할 수 있게끔 한다.
         PostEditor postEditor = postEditorBuilder
@@ -99,6 +90,16 @@ public class PostService {
                 .content(postEdit.getContent())
                 .build();
 
-        post.edit(postEditorBuilder.build());
+        post.edit(postEditor);
+
+        // * 방법 2
+//        post.edit2(postEdit.getTitle(), postEdit.getContent());
+        // * 방법 2 (null 허용 상황)
+        /*post.edit2(
+                postEdit.getTitle() != null ? postEdit.getTitle() : post.getTitle()
+                ,postEdit.getContent() != null ? postEdit.getContent() : post.getContent());*/
+
+        // * responseBody 전달하려고 함.
+        return new PostResponse(post);
     }
 }

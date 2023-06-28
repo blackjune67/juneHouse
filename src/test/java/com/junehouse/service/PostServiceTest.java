@@ -1,6 +1,7 @@
 package com.junehouse.service;
 
 import com.junehouse.domain.Post;
+import com.junehouse.exception.PostNotFound;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -188,5 +188,76 @@ class PostServiceTest {
 //        assertEquals("안드로이드", changePost.getTitle());
         assertEquals("아이폰", changePost.getTitle());
         assertEquals("샘송", changePost.getContent());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void test6() {
+        //given
+        Post post = Post.builder()
+                .title("게시글1")
+                .content("내용1")
+                .build();
+        postRepository.save(post);
+
+        //when
+        postService.delete(post.getId());
+
+        //then
+        assertEquals(0, postRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void test7() {
+        //given
+        Post post = Post.builder()
+                .title("스타벅스")
+                .content("아이스아메리카노")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.get(post.getId() + 1L);
+        });
+//        assertEquals("존재하지 않는 글입니다.", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제, 존재하지 않는 글 삭제")
+    void test8() {
+        //given
+        Post post = Post.builder()
+                .title("게시글1")
+                .content("내용1")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.delete(post.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 수정, 존재하지 않는 게시글")
+    void test9() {
+        //given
+        Post post = Post.builder()
+                .title("아이폰")
+                .content("애플")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title(null)
+                .content("샘송")
+                .build();
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.edit(post.getId() + 1L, postEdit);
+        });
     }
 }

@@ -162,4 +162,31 @@ class PostServiceTest {
 //        assertEquals("안드로이드", changePost.getTitle());
         assertEquals("안드로이드 비젼", changePost.getContent());
     }
+
+    @Test
+    @DisplayName("글 수정")
+    void test5() {
+        //given
+        Post post = Post.builder()
+                .title("아이폰")
+                .content("애플")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title(null)
+                .content("샘송")
+                .build();
+
+        //when
+        postService.edit(post.getId(), postEdit);
+
+        //then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+
+//        assertEquals("안드로이드", changePost.getTitle());
+        assertEquals("아이폰", changePost.getTitle());
+        assertEquals("샘송", changePost.getContent());
+    }
 }

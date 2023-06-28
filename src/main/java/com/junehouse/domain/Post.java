@@ -37,8 +37,8 @@ public class Post {
         title = postEditor.getTitle();
         content = postEditor.getContent();
     }
-    // -----------------------------------------------
 
+    // * 방법 2
     public void edit2(String title, String content) {
         this.title = title;
         this.content = content;

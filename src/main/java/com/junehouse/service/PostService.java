@@ -2,6 +2,7 @@ package com.junehouse.service;
 
 import com.junehouse.domain.Post;
 import com.junehouse.domain.PostEditor;
+import com.junehouse.exception.PostNotFound;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
@@ -59,7 +60,7 @@ public class PostService {
     // * 서비스 정책에 맞는 응답 클래스 분리
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         return PostResponse.builder()
                 .id(post.getId())
@@ -79,7 +80,7 @@ public class PostService {
     @Transactional
     public PostResponse edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         // * 방법 1
         PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
@@ -105,7 +106,7 @@ public class PostService {
 
     public void delete(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         postRepository.delete(post);
     }

@@ -2,33 +2,25 @@ package com.junehouse.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@ToString
+//@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class ErrorResponse {
     private final String code;
     private final String message;
-
-    private Map<String, String> validation = new HashMap<>();
-
-//    private Validation validation;
+    private final Map<String, String> validate;
 
     @Builder
-//    public ErrorResponse(String code, String message, Validation validation) {
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(String code, String message, Map<String, String> validation) {
         this.code = code;
         this.message = message;
-//        this.validation = validation;
+        this.validate = validation != null ? validation : new HashMap<>();
     }
 
-    //    private final Map<String, String> validation = new HashMap<>();
-
     public void addValidation(String fieldName, String errorMessage) {
-        this.validation.put(fieldName, errorMessage);
+        this.validate.put(fieldName, errorMessage);
     }
 }

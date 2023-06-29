@@ -1,15 +1,12 @@
 package com.junehouse.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
 @Setter
 @Getter
-@ToString
+@NoArgsConstructor
 public class PostEdit {
 
     @NotBlank(message = "제목을 입력하세요.")

@@ -2,19 +2,17 @@ package com.junehouse.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@ToString
+//@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class ErrorResponse {
     private final String code;
     private final String message;
 
-    private Map<String, String> validation = new HashMap<>();
+    private final Map<String, String> validation = new HashMap<>();
 
 //    private Validation validation;
 

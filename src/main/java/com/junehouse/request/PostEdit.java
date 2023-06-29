@@ -6,7 +6,6 @@ import javax.validation.constraints.NotBlank;
 
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
 public class PostEdit {
 

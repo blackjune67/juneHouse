@@ -1,6 +1,5 @@
 package com.junehouse.controller;
 
-import com.junehouse.exception.InvalidRequest;
 import com.junehouse.exception.JuneTopException;
 import com.junehouse.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -39,21 +38,18 @@ public class ExceptionController {
 //    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(JuneTopException.class)
     public ResponseEntity<ErrorResponse> PostNotFound(JuneTopException e) {
-//        int statusCode = e.getStatusCode();
         ErrorResponse body = ErrorResponse.builder()
                 .code(e.getStatusCode())
                 .message(e.getMessage())
+                .validation(e
+                        .getValidation())
                 .build();
 
-        if (e instanceof InvalidRequest) {
+        /*if (e instanceof InvalidRequest) {
             InvalidRequest invalidRequest = (InvalidRequest) e;
-            String filedName = invalidRequest.getFiledName();
-            String message = invalidRequest.getFiledMessage();
-            body.addValidation(filedName, message);
-        }
+            body.addValidation(invalidRequest.getFieldName(), invalidRequest.getFieldMessage());
+        }*/
 
-        ResponseEntity<ErrorResponse> body1 = ResponseEntity.status(Integer.parseInt(e.getStatusCode())).body(body);
-
-        return body1;
+        return ResponseEntity.status(Integer.parseInt(e.getStatusCode())).body(body);
     }
 }

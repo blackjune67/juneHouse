@@ -9,17 +9,19 @@ import lombok.Getter;
 public class InvalidRequest extends JuneTopException {
 
     private static final String MESSAGE = "잘못된 요청입니다.";
-    public String filedName;
-    public String filedMessage;
+    private String fieldName;
+    private String fieldMessage;
+    private String validation1;
 
     public InvalidRequest() {
         super(MESSAGE);
     }
 
-    public InvalidRequest(String filedName, String message) {
+    public InvalidRequest(String fieldName, String message) {
         super(MESSAGE);
-        this.filedName = filedName;
-        this.filedMessage = message;
+        /*this.fieldName = fieldName;
+        this.fieldMessage = message;*/
+        addValidation(fieldName, message);
     }
 
     @Override

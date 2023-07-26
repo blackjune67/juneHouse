@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -56,7 +57,7 @@ public class PostControllerDocTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andDo(
-                        document("index", pathParameters(
+                        document("post-inquire", pathParameters(
                                 parameterWithName("postId").description("게시글 ID")
                                 ),
                                 responseFields(
@@ -84,9 +85,9 @@ public class PostControllerDocTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andDo(
-                        document("index", requestFields(
-                                fieldWithPath("title").description("제목"),
-                                fieldWithPath("content").description("내용")
+                        document("post-create", requestFields(
+                                fieldWithPath("title").description("제목").attributes(Attributes.key("constraint").value("필수입력입니다.")),
+                                fieldWithPath("content").description("내용").optional()
                                 )
                         ));
     }

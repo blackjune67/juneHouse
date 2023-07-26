@@ -13,10 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -50,12 +49,12 @@ class PostControllerTest {
     }
 
     // * MockMVC 한글 깨짐 처리
-    @BeforeEach
+    /*@BeforeEach
     public void setMockMvc() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print()).build();
-    }
+    }*/
 
     @Test
     @DisplayName("/posts 요청")
@@ -263,5 +262,27 @@ class PostControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("알고리즘 테스트")
+    void test11() {
+        ArrayList<Integer> queue = new ArrayList<>();
+        String nullString = null;
+
+        if (queue.isEmpty()) {
+            System.out.println("nullString = " + nullString);
+        }
+
+        /*boolean data = queue.add(1);
+
+        for (int j = 0; j < queue.size(); j++) {
+            if (data) {
+                System.out.println("data : " + data);
+            } else {
+                System.out.println("null");
+            }
+        }*/
+
     }
 }

@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router";
 
 const title = ref("");
 const content = ref("");
+const router = useRouter();
 
 const write = () => {
-
-  axios.post("http://localhost:8080/posts", {title: title.value, content: content.value})
-  // axios.get("http://localhost:8080/docs/index.html")
-
-  /*try {
-    await axios.post("http://localhost:8080/docs/index.html")
-  } catch (error) {
-    console.log(error)
-  }*/
-  // console.log(title.value, content.value)
-}
-
+  axios.post("/api/posts", {title: title.value, content: content.value})
+      .then(() => {
+        router.replace({
+          name: "home",
+        })
+      });
+};
 </script>
 
 <template>

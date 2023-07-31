@@ -8,7 +8,7 @@ const content = ref("");
 const router = useRouter();
 
 const write = () => {
-  axios.post("/api/posts", {title: title.value, content: content.value})
+  axios.post("/api/posts", { title: title.value, content: content.value })
       .then(() => {
         router.replace({
           name: "home",
@@ -38,7 +38,7 @@ const write = () => {
         type="primary"
         @click="write()"
     >
-      글작성완료
+      완료
     </el-button>
   </div>
 </template>

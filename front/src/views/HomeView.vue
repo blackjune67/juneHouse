@@ -2,8 +2,10 @@
 import axios from "axios";
 import {useDialog} from "element-plus";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 
-const posts:any = ref([]);
+const router = useRouter();
+const posts: any = ref([]);
 
 axios.get("/api/posts?page=1&size=3").then((res) => {
   res.data.forEach((result: any) => {
@@ -13,10 +15,14 @@ axios.get("/api/posts?page=1&size=3").then((res) => {
 </script>
 
 <template>
-  <ul>
-    <li v-for="post in posts" :key="posts.id">
-      <div>{{post.title}}</div>
-      <div>{{post.content}}</div>
-    </li>
-  </ul>
+  <div>
+    <ul>
+      <li v-for="post in posts" :key="post.id">
+        <div>
+          <router-link :to="{name: 'read', params: {postId: post.id}}" replace>{{ post.title }}</router-link>
+        </div>
+        <div>{{ post.content }}</div>
+      </li>
+    </ul>
+  </div>
 </template>

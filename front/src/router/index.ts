@@ -18,9 +18,10 @@ const router = createRouter({
       // component: () => import('../views/WriteView.vue')
     },
     {
-      path: '/read',
+      path: '/read/:postId',
       name: 'read',
       component: ReadView,
+      props: true,
     }
   ]
 })

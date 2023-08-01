@@ -27,9 +27,9 @@ onMounted(() => {
 
 const edit = () => {
   axios.patch(`/api/posts/${props.postId}`, post.value).then(() => {
-        router.replace({
-          name: "home",
-        });
+    router.replace({
+      name: "home",
+    });
   });
 };
 </script>
@@ -51,15 +51,12 @@ const edit = () => {
   </div>
 
   <div class="mt-2">
-    <el-button
-        type="primary"
-        @click="edit()"
-    >
-      수정완료
-    </el-button>
+    <div class="d-flex justify-content-end">
+      <el-button type="primary" @click="edit()">수정완료</el-button>
+    </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 
 </style>

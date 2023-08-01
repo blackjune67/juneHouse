@@ -4,17 +4,14 @@ import Content from "@/components/Content.vue";
 </script>
 
 <template>
-  <div class="common-layout">
-    <el-container>
+  <div>
       <Header/>
       <Content/>
-    </el-container>
   </div>
 </template>
 
-<style>
+<style scoped>
 body {
-  margin: 0;
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }

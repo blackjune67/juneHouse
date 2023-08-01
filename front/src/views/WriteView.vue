@@ -8,7 +8,7 @@ const content = ref("");
 const router = useRouter();
 
 const write = () => {
-  axios.post("/api/posts", { title: title.value, content: content.value })
+  axios.post("/api/posts", {title: title.value, content: content.value})
       .then(() => {
         router.replace({
           name: "home",
@@ -34,15 +34,12 @@ const write = () => {
   </div>
 
   <div class="mt-2">
-    <el-button
-        type="primary"
-        @click="write()"
-    >
-      완료
-    </el-button>
+    <div class="d-flex justify-content-end">
+      <el-button type="primary" @click="write()">완료</el-button>
+    </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 
 </style>

@@ -20,6 +20,12 @@ public class PostController {
     // SPA => vue + SSR = nuxt.js, react + SSR = next.js
     private final PostService postService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "hello!";
+    }
+
+
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {

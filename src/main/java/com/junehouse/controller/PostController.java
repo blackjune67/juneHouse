@@ -20,9 +20,10 @@ public class PostController {
     // SPA => vue + SSR = nuxt.js, react + SSR = next.js
     private final PostService postService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "hello!";
+    @GetMapping("/foo")
+    public String foo(@RequestAttribute("userName") String userName) {
+        log.info(">>> {}", userName);
+        return "hello, foo!";
     }
 
 

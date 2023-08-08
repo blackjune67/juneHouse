@@ -107,7 +107,7 @@ class PostControllerTest {
     void test3() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
-                .title("지각 더럽게 많이하는 여자친구")
+                .title("제목111")
                 .content("내용입니다.")
                 .build();
 
@@ -116,15 +116,17 @@ class PostControllerTest {
         //when 언제
         mockMvc.perform(
                         post("/posts")
+                                .header("authorization","june")
                                 .contentType(APPLICATION_JSON)
                                 .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+
         //then 그 다음에
         assertEquals(1L, postRepository.count());
         Post findPost = postRepository.findAll().get(0);
-        assertEquals("지각 더럽게 많이하는 여자친구", findPost.getTitle());
+        assertEquals("제목111", findPost.getTitle());
         assertEquals("내용입니다.", findPost.getContent());
     }
 

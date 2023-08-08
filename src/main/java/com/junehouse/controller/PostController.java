@@ -1,5 +1,6 @@
 package com.junehouse.controller;
 
+import com.junehouse.config.dto.UserSession;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
@@ -19,6 +20,13 @@ public class PostController {
     // SSR => jsp, thymeleaf
     // SPA => vue + SSR = nuxt.js, react + SSR = next.js
     private final PostService postService;
+
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info("==> {}", userSession.name);
+        return userSession.name;
+    }
+
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostMapping("/posts")

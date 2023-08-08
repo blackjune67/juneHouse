@@ -1,5 +1,6 @@
 package com.junehouse.controller;
 
+import com.junehouse.config.dto.UserSession;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
 import com.junehouse.request.PostSearch;
@@ -21,9 +22,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/foo")
-    public String foo(@RequestAttribute("userName") String userName) {
-        log.info(">>> {}", userName);
-        return "hello, foo!";
+    public String foo(UserSession userSession) {
+        log.info("==> {}", userSession.name);
+        return userSession.name;
     }
 
 

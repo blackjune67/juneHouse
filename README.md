@@ -32,3 +32,5 @@ JUNEHOUSE
 ### 새로운 기능
     - 문서화 기능 추가
         - Spring REST Docs 추가
+    - 인증 기능 추가
+        - Interceptor => ArgumentResovler로 변환

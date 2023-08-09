@@ -1,0 +1,9 @@
+### 인증 TEST 요청
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "1abc@naver.com",
+  "password": "a1234"
+}

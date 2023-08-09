@@ -1,9 +1,9 @@
-### HTTP TEST 요청
+### 인증 TEST 요청
 
-GET http://localhost:8080/auth/login
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "blackjune67@gmail.com",
+  "email": "1abc@naver.com",
   "password": "a1234"
 }

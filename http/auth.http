@@ -1,0 +1,9 @@
+### HTTP TEST 요청
+
+GET http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "blackjune67@gmail.com",
+  "password": "a1234"
+}

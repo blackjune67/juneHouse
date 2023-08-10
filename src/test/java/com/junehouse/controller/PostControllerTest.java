@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -116,7 +115,7 @@ class PostControllerTest {
         //when 언제
         mockMvc.perform(
                         post("/posts")
-                                .header("authorization","june")
+                                .header("authorization", "june")
                                 .contentType(APPLICATION_JSON)
                                 .content(json)
                 )
@@ -264,27 +263,5 @@ class PostControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("알고리즘 테스트")
-    void test11() {
-        ArrayList<Integer> queue = new ArrayList<>();
-        String nullString = null;
-
-        if (queue.isEmpty()) {
-            System.out.println("nullString = " + nullString);
-        }
-
-        /*boolean data = queue.add(1);
-
-        for (int j = 0; j < queue.size(); j++) {
-            if (data) {
-                System.out.println("data : " + data);
-            } else {
-                System.out.println("null");
-            }
-        }*/
-
     }
 }

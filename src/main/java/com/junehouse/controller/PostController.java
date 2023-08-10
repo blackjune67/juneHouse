@@ -27,6 +27,11 @@ public class PostController {
         return userSession.id;
     }
 
+    @GetMapping("/bar")
+    public String bar(UserSession userSession) {
+        return "인증이 필요한 페이지입니다.";
+    }
+
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostMapping("/posts")

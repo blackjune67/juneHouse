@@ -1,9 +1,9 @@
 package com.junehouse.controller;
 
-import com.junehouse.domain.Member;
-import com.junehouse.exception.InvalidSign;
 import com.junehouse.repository.MemberRepository;
 import com.junehouse.request.Login;
+import com.junehouse.response.SessionResponse;
+import com.junehouse.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final MemberRepository userRepository;
+    private final AuthService authService;
 
     @PostMapping("/auth/login")
-    public Member login(@RequestBody Login login) {
-        // json
+    public SessionResponse login(@RequestBody Login login) {
         log.info("==> {} ", login);
-        // db
-        Member member = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(InvalidSign::new);
-        // 토큰을 응답
-        return member;
+        return new SessionResponse(authService.signin(login));
     }
 }

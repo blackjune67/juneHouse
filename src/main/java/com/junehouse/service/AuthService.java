@@ -7,15 +7,18 @@ import com.junehouse.request.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final MemberRepository memberRepository;
 
-    public Member signin(Login login) {
-        Member member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(InvalidSign::new);
-        return member;
+    public List<Member> signin(Login login) {
+        List<Member> memberList = Optional.ofNullable(memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword()))
+                .orElseThrow(() -> new InvalidSign());
+        return memberList;
     }
 }

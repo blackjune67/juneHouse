@@ -1,10 +1,14 @@
 package com.junehouse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.domain.Member;
 import com.junehouse.domain.Post;
+import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
+import com.junehouse.request.Login;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
+import com.junehouse.service.AuthService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,6 +42,12 @@ class PostControllerTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -116,7 +125,7 @@ class PostControllerTest {
         //when 언제
         mockMvc.perform(
                         post("/posts")
-                                .header("authorization","june")
+                                .header("authorization", "june")
                                 .contentType(APPLICATION_JSON)
                                 .content(json)
                 )
@@ -267,24 +276,28 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("알고리즘 테스트")
-    void test11() {
-        ArrayList<Integer> queue = new ArrayList<>();
-        String nullString = null;
+    @DisplayName("인증 테스트")
+    void test11() throws Exception {
+        // given
+        Member member = Member.builder()
+                .email("abc@naver.com")
+                .password("1234")
+                .build();
+        memberRepository.save(member);
 
-        if (queue.isEmpty()) {
-            System.out.println("nullString = " + nullString);
-        }
+        Login login = Login.builder()
+                .email("abc@naver.com")
+                .password("1234")
+                .build();
 
-        /*boolean data = queue.add(1);
+        String json = objectMapper.writeValueAsString(login);
 
-        for (int j = 0; j < queue.size(); j++) {
-            if (data) {
-                System.out.println("data : " + data);
-            } else {
-                System.out.println("null");
-            }
-        }*/
-
+        // expected
+        mockMvc.perform(post("/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }

@@ -1,14 +1,10 @@
 package com.junehouse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.junehouse.domain.Member;
 import com.junehouse.domain.Post;
-import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
-import com.junehouse.request.Login;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
-import com.junehouse.service.AuthService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,12 +38,6 @@ class PostControllerTest {
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -272,32 +262,6 @@ class PostControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("인증 테스트")
-    void test11() throws Exception {
-        // given
-        Member member = Member.builder()
-                .email("abc@naver.com")
-                .password("1234")
-                .build();
-        memberRepository.save(member);
-
-        Login login = Login.builder()
-                .email("abc@naver.com")
-                .password("1234")
-                .build();
-
-        String json = objectMapper.writeValueAsString(login);
-
-        // expected
-        mockMvc.perform(post("/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

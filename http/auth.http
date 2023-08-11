@@ -1,4 +1,4 @@
-### 인증 TEST 요청
+### 로그인
 
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -7,3 +7,9 @@ Content-Type: application/json
   "email": "abc@naver.com",
   "password": "1234"
 }
+
+### 인증 페이지 요청
+
+GET http://localhost:8080/foo
+Content-Type: application/json
+Cookie: SESSION=dd404fdb-9873-4be5-8f11-d463e87c1183

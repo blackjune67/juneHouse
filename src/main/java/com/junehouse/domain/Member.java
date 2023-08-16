@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// * 로그인 유저 Entity
+// * 회원 Entity
 @Getter
 @Entity
 //@Table(name = "users")

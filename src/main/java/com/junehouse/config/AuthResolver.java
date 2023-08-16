@@ -12,6 +12,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
@@ -20,20 +23,29 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        log.info(">>> supportsParameter");
         return parameter.getParameterType().equals(UserSession.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String accessToken = webRequest.getHeader("Authorization");
+        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 
-        // * 검증 자체를 안하고 통과 시킴
-        if (accessToken == null || accessToken.equals("")) {
+        if(servletRequest == null) {
+            log.error("servletRequest null");
             throw new Unauthorized();
         }
 
-       Session byAccessToken = sessionRepository.findByAccessToken(accessToken)
+        Cookie[] cookies = servletRequest.getCookies();
+
+        if (cookies.length == 0) {
+            log.error("쿠키가 없습니다");
+            throw new Unauthorized();
+        }
+
+        String accessToken = cookies[0].getValue();
+        log.info("== value:{}", accessToken);
+
+        Session byAccessToken = sessionRepository.findByAccessToken(accessToken)
                 .orElseThrow(Unauthorized::new);
 
         return new UserSession(byAccessToken.getMember().getId());

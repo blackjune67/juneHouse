@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -107,7 +106,7 @@ class PostControllerTest {
     void test3() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
-                .title("지각 더럽게 많이하는 여자친구")
+                .title("제목111")
                 .content("내용입니다.")
                 .build();
 
@@ -116,15 +115,17 @@ class PostControllerTest {
         //when 언제
         mockMvc.perform(
                         post("/posts")
+                                .header("authorization", "june")
                                 .contentType(APPLICATION_JSON)
                                 .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+
         //then 그 다음에
         assertEquals(1L, postRepository.count());
         Post findPost = postRepository.findAll().get(0);
-        assertEquals("지각 더럽게 많이하는 여자친구", findPost.getTitle());
+        assertEquals("제목111", findPost.getTitle());
         assertEquals("내용입니다.", findPost.getContent());
     }
 
@@ -262,27 +263,5 @@ class PostControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("알고리즘 테스트")
-    void test11() {
-        ArrayList<Integer> queue = new ArrayList<>();
-        String nullString = null;
-
-        if (queue.isEmpty()) {
-            System.out.println("nullString = " + nullString);
-        }
-
-        /*boolean data = queue.add(1);
-
-        for (int j = 0; j < queue.size(); j++) {
-            if (data) {
-                System.out.println("data : " + data);
-            } else {
-                System.out.println("null");
-            }
-        }*/
-
     }
 }

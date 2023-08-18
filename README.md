@@ -34,3 +34,6 @@ JUNEHOUSE
         - Spring REST Docs 추가
     - 인증 기능 추가
         - Interceptor => ArgumentResovler로 변환
+    - 회원가입 및 로그인 인증 기능 추가
+        ㄴ 세션 기능 테스트
+        ㄴ 쿠키 header 저장 (ResponseCookie 클래스 이용)

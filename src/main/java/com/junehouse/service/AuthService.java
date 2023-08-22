@@ -25,4 +25,7 @@ public class AuthService {
 //        return session.getAccessToken();
         return member.getId();
     }
+
+    public void signup() {
+    }
 }

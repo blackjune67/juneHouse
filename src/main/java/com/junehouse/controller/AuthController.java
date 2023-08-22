@@ -2,6 +2,7 @@ package com.junehouse.controller;
 
 import com.junehouse.config.AppConfig;
 import com.junehouse.request.Login;
+import com.junehouse.request.Signup;
 import com.junehouse.response.SessionResponse;
 import com.junehouse.service.AuthService;
 import io.jsonwebtoken.Jwts;
@@ -61,5 +62,10 @@ public class AuthController {
                 .build();*/
 //        return jws;
         return new SessionResponse(jws);
+    }
+
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody Signup signup) {
+        authService.signup();
     }
 }

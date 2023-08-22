@@ -25,16 +25,17 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public SessionResponse login(@RequestBody Login login) {
-//        String accessToken = authService.signin(login);
+//        String accessToken = String.valueOf(authService.signin(login));
         Long memberId = authService.signin(login);
 
         Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.DATE,1); //만료일 1일
+        // * cal.add(Calendar.DATE,1); //만료일 1일
         cal.add(Calendar.HOUR,1); //만료일 1시간
 
         // * JWT 인증
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // ! HS256 key 값을 고정하도록 변경
 //        String secretString = Encoders.BASE64.encode(key.getEncoded());
+//        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.decodeBase64(appConfig.getJwtKey()));
         SecretKey secretKey = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
         String jws = Jwts.builder()

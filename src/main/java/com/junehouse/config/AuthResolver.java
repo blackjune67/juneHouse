@@ -56,11 +56,11 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         Session byAccessToken = sessionRepository.findByAccessToken(accessToken)
                 .orElseThrow(Unauthorized::new);*/
 
-        byte[] decodeKey = Base64.decodeBase64(appConfig.getJwtKey());
+//        byte[] decodeKey = Base64.decodeBase64(appConfig.getJwtKey());
 
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(decodeKey)
+                    .setSigningKey(appConfig.getJwtKey())
                     .build()
                     .parseClaimsJws(jws);
 

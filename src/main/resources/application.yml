@@ -37,19 +37,5 @@ logging:
             sql: trace
 
 ## STATIC KEY
-
-
-environments:
-  jwt_key: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.NsqiK0Hi-XMfh--iaXWibKHMUszRhjQp5KRC96FBkRs"
-  local:
-    url: http://localhost:8080
-    name: Local
-  dev:
-    url: https://dev.example.com
-    name: Developer Setup
-  prod:
-    url: https://another.example.com
-    name: My Cool App
-
-june:
-  hello: "testName"
+secrete:
+  jwt_key: "H5+BLGxTtZ2+Ptabl/ggOPgI8HG8jdNEHvAqoHf1kvw="

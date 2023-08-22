@@ -1,23 +1,22 @@
 package com.junehouse.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Base64;
-import java.util.Map;
 
-@Data
-@ConfigurationProperties(prefix = "environments")
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "secrete")
 public class AppConfig {
     private byte[] jwtKey;
 
     public void setJwtKey(String jwtKey) {
-        Base64.getDecoder().decode(jwtKey);
+        this.jwtKey = Base64.getDecoder().decode(jwtKey);
     }
 
     public byte[] getJwtKey() {
         return jwtKey;
     }
-
-    private Map<String, String> local;
 }

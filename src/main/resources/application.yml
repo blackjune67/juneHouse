@@ -35,3 +35,7 @@ logging:
         type:
           descriptor:
             sql: trace
+
+## STATIC KEY
+secrete:
+  jwt_key: "H5+BLGxTtZ2+Ptabl/ggOPgI8HG8jdNEHvAqoHf1kvw="

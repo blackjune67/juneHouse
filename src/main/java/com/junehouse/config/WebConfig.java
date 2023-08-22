@@ -14,6 +14,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final SessionRepository sessionRepository;
+    private final AppConfig appConfig;
 
     // * CORS 문제해결
     // * 모든 요청을 허용하도록 수정함
@@ -35,6 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
     // * ArgumentResolver를 이용(인증DTO)해서 인증처리를 한다.
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthResolver(sessionRepository));
+        resolvers.add(new AuthResolver(sessionRepository, appConfig));
     }
 }

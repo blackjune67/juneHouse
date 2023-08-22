@@ -39,6 +39,9 @@ dependencies {
     implementation 'com.querydsl:querydsl-core'
     implementation 'com.querydsl:querydsl-jpa'
 
+    // yml 파일 custom 설정 매핑
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"

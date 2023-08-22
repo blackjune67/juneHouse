@@ -24,7 +24,9 @@ bin/
 *.ipr
 out/
 !**/src/main/**/out/
+!**/src/main/generated/
 !**/src/test/**/out/
+http/post.http
 
 ### NetBeans ###
 /nbproject/private/

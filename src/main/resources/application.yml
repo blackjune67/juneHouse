@@ -3,6 +3,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  sql:
+    init:
+      mode: always
 
   datasource:
     url: jdbc:h2:mem:june
@@ -22,6 +25,8 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+    defer-datasource-initialization: true
+    generate-ddl: true
 
 logging:
   level:
@@ -30,3 +35,7 @@ logging:
         type:
           descriptor:
             sql: trace
+
+## STATIC KEY
+secrete:
+  jwt_key: "H5+BLGxTtZ2+Ptabl/ggOPgI8HG8jdNEHvAqoHf1kvw="

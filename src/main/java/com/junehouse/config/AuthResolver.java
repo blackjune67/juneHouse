@@ -21,7 +21,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final SessionRepository sessionRepository;
-    private static final String KEY = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.NsqiK0Hi-XMfh--iaXWibKHMUszRhjQp5KRC96FBkRs";
+    private final AppConfig appConfig;
+
+//    private static final String KEY = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.NsqiK0Hi-XMfh--iaXWibKHMUszRhjQp5KRC96FBkRs";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -30,6 +32,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        log.info("==> appconfig:{}", appConfig.toString());
 //        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         String jws = webRequest.getHeader("Authorization");
 
@@ -53,14 +56,16 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         Session byAccessToken = sessionRepository.findByAccessToken(accessToken)
                 .orElseThrow(Unauthorized::new);*/
 
-        byte[] decodeKey = Base64.decodeBase64(KEY);
+        byte[] decodeKey = Base64.decodeBase64(appConfig.getJwtKey());
 
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(decodeKey)
                     .build()
                     .parseClaimsJws(jws);
+
             log.info("==> jws:{}", claimsJws);
+
             String id = claimsJws.getBody().getSubject();
             return new UserSession(Long.parseLong(id));
         } catch (JwtException e) {

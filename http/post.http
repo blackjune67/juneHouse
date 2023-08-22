@@ -2,4 +2,4 @@
 
 GET http://localhost:8080/foo
 Content-Type: application/json
-Authorization: testAuthorization
+Authorization: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjkyNjE1NDk0fQ.a65TMn-uC5SzBUyyw9XmmShkPNAXeY8BRvzTqmTJblvIlNCnTC_WBbU6LHx4-GvP

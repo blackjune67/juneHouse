@@ -9,7 +9,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -56,11 +55,11 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         Session byAccessToken = sessionRepository.findByAccessToken(accessToken)
                 .orElseThrow(Unauthorized::new);*/
 
-        byte[] decodeKey = Base64.decodeBase64(appConfig.getJwtKey());
+//        byte[] decodeKey = Base64.decodeBase64(appConfig.getJwtKey());
 
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(decodeKey)
+                    .setSigningKey(appConfig.getJwtKey())
                     .build()
                     .parseClaimsJws(jws);
 

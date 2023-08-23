@@ -7,6 +7,7 @@ import com.junehouse.repository.MemberRepository;
 import com.junehouse.request.Login;
 import com.junehouse.request.Signup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,25 +19,40 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
 
+    // * 로그인
     @Transactional
     public Long signin(Login login) {
-        Member member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(InvalidSign::new);
+        /*Member member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
+                .orElseThrow(InvalidSign::new);*/
 //        Session session = member.addSession();
 //        return session.getAccessToken();
+        Member member = memberRepository.findByEmail(login.getEmail())
+                .orElseThrow(InvalidSign::new);
+
+        SCryptPasswordEncoder sCryptPasswordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
+
+        boolean matches = sCryptPasswordEncoder.matches(login.getPassword(), member.getPassword());
+        if(!matches) {
+            throw new InvalidSign();
+        }
+
         return member.getId();
     }
 
+    // * 회원가입
     public void signup(Signup signup) {
         Optional<Member> memberOptional = memberRepository.findByEmail(signup.getEmail());
         if(memberOptional.isPresent()) {
             throw new AlreadyExistsEmailException();
         }
 
+        SCryptPasswordEncoder sCryptPasswordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
+        String encodePassword = sCryptPasswordEncoder.encode(signup.getPassword());
+
         Member member = Member.builder()
                 .name(signup.getName())
                 .email(signup.getEmail())
-                .password(signup.getPassword())
+                .password(encodePassword)
                 .build();
 
         memberRepository.save(member);

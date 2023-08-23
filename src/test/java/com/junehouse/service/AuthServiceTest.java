@@ -34,7 +34,6 @@ class AuthServiceTest {
         Signup signup = Signup.builder()
                 .email("june@naver.com")
                 .name("최하준")
-                .password("a1234567")
                 .build();
 
         // when
@@ -46,7 +45,7 @@ class AuthServiceTest {
         Member member = memberRepository.findAll().iterator().next();
         assertEquals("june@naver.com", member.getEmail());
         assertEquals("최하준", member.getName());
-        assertEquals("a1234567", member.getPassword());
+        assertEquals(signup.getPassword(), member.getPassword());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.junehouse.service;
 
+import com.junehouse.crypto.PasswordEncoder;
 import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.exception.InvalidSign;
@@ -7,7 +8,6 @@ import com.junehouse.repository.MemberRepository;
 import com.junehouse.request.Login;
 import com.junehouse.request.Signup;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,9 +29,9 @@ public class AuthService {
         Member member = memberRepository.findByEmail(login.getEmail())
                 .orElseThrow(InvalidSign::new);
 
-        SCryptPasswordEncoder sCryptPasswordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        boolean matches = passwordEncoder.match(login.getPassword(), member.getPassword());
 
-        boolean matches = sCryptPasswordEncoder.matches(login.getPassword(), member.getPassword());
         if(!matches) {
             throw new InvalidSign();
         }
@@ -46,8 +46,8 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        SCryptPasswordEncoder sCryptPasswordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
-        String encodePassword = sCryptPasswordEncoder.encode(signup.getPassword());
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        String encodePassword = passwordEncoder.encrypt(signup.getPassword());
 
         Member member = Member.builder()
                 .name(signup.getName())

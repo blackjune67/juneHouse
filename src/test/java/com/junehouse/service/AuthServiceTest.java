@@ -1,5 +1,6 @@
 package com.junehouse.service;
 
+import com.junehouse.crypto.PasswordEncoder;
 import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.exception.InvalidSign;
@@ -33,7 +34,8 @@ class AuthServiceTest {
     public void test01() {
         // given
         Signup signup = Signup.builder()
-                .email("june@naver.com")
+                .email("june001@naver.com")
+                .password("a12345")
                 .name("최하준")
                 .build();
 
@@ -44,9 +46,10 @@ class AuthServiceTest {
         assertEquals(1, memberRepository.count());
 
         Member member = memberRepository.findAll().iterator().next();
-        assertEquals("june@naver.com", member.getEmail());
+        assertEquals("june001@naver.com", member.getEmail());
         assertEquals("최하준", member.getName());
-        assertEquals(signup.getPassword(), member.getPassword());
+        assertNotNull(member.getName());
+        assertNotEquals("a12345", member.getPassword());
     }
 
     @Test
@@ -75,12 +78,15 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     public void test03() {
         // given
-        Signup signup = Signup.builder()
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        String password = passwordEncoder.encrypt("ca009898*");
+        Member member = Member.builder()
                 .email("june@naver.com")
-                .password("ca009898*")
+                .password(password)
                 .name("최하준")
                 .build();
-        authService.signup(signup);
+
+        memberRepository.save(member);
 
         Login login = Login.builder()
                 .email("june@naver.com")

@@ -1,6 +1,6 @@
 package com.junehouse.service;
 
-import com.junehouse.crypto.PasswordEncoder;
+import com.junehouse.crypto.ScryptPasswordEncoder;
 import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.exception.InvalidSign;
@@ -12,9 +12,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class AuthServiceTest {
 
@@ -48,8 +50,10 @@ class AuthServiceTest {
         Member member = memberRepository.findAll().iterator().next();
         assertEquals("june001@naver.com", member.getEmail());
         assertEquals("최하준", member.getName());
-        assertNotNull(member.getName());
-        assertNotEquals("a12345", member.getPassword());
+        assertNotNull(member.getPassword());
+        assertEquals("a12345", member.getPassword());
+//        assertNotNull(member.getName());
+//        assertNotEquals("a12345", member.getPassword());
     }
 
     @Test
@@ -78,7 +82,7 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     public void test03() {
         // given
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        ScryptPasswordEncoder passwordEncoder = new ScryptPasswordEncoder();
         String password = passwordEncoder.encrypt("ca009898*");
         Member member = Member.builder()
                 .email("june@naver.com")

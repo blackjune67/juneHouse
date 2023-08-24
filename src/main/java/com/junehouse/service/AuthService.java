@@ -18,6 +18,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // * 로그인
     @Transactional
@@ -29,7 +30,7 @@ public class AuthService {
         Member member = memberRepository.findByEmail(login.getEmail())
                 .orElseThrow(InvalidSign::new);
 
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+//        PasswordEncoder passwordEncoder = new PasswordEncoder();
         boolean matches = passwordEncoder.match(login.getPassword(), member.getPassword());
 
         if(!matches) {
@@ -46,7 +47,7 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+//        PasswordEncoder passwordEncoder = new PasswordEncoder();
         String encodePassword = passwordEncoder.encrypt(signup.getPassword());
 
         Member member = Member.builder()

@@ -32,6 +32,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("회원가입 성공")
     public void test01() {
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
         // given
         Signup signup = Signup.builder()
                 .email("june001@naver.com")
@@ -48,8 +49,9 @@ class AuthServiceTest {
         Member member = memberRepository.findAll().iterator().next();
         assertEquals("june001@naver.com", member.getEmail());
         assertEquals("최하준", member.getName());
-        assertNotNull(member.getName());
-        assertNotEquals("a12345", member.getPassword());
+        assertTrue(passwordEncoder.match("a12345", member.getPassword()));
+//        assertNotNull(member.getName());
+//        assertNotEquals("a12345", member.getPassword());
     }
 
     @Test

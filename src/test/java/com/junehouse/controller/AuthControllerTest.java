@@ -6,6 +6,7 @@ import com.junehouse.domain.Session;
 import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.SessionRepository;
 import com.junehouse.request.Login;
+import com.junehouse.request.Signup;
 import com.junehouse.service.AuthService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -190,6 +191,24 @@ class AuthControllerTest {
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    void test06() throws Exception {
+        // * 회원가입 회원
+        Signup signup = Signup.builder()
+                .email("june@kakao.com")
+                .password("a1234")
+                .name("최하하")
+                .build();
+
+        mockMvc.perform(post("/auth/signup")
+                        .content(objectMapper.writeValueAsString(signup))
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

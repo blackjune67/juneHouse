@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(AppConfig.class)
 @SpringBootApplication
 public class JuneHouseApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(JuneHouseApplication.class, args);
     }

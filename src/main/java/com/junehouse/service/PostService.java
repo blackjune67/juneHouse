@@ -20,34 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
-
-    // * CASE_1 : 저장한 데이터 Entity -> response로 응답하기
-    /*public Post write(PostCreate postCreate) {
-        // * Before
-        //Post post = new Post(postCreate.getTitle(), postCreate.getContent());
-
-        // * After
-        Post post = Post.builder()
-                .title(postCreate.title)
-                .content(postCreate.content)
-                .build();
-
-       return postRepository.save(post);
-    }*/
-
-    // * CASE_2 : 저장한 데이터의 primary_id -> response로 응답하기
-    /*public Long write(PostCreate postCreate) {
-        Post post = Post.builder()
-                .title(postCreate.title)
-                .content(postCreate.content)
-                .build();
-
-        postRepository.save(post);
-        return post.getId();
-    }*/
-
     // * CASE_3 : 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 관리함.
     public void write(PostCreate postCreate) {
         Post post = Post.builder()
@@ -56,7 +29,6 @@ public class PostService {
                 .build();
         postRepository.save(post);
     }
-
     // * 서비스 정책에 맞는 응답 클래스 분리
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
@@ -68,15 +40,11 @@ public class PostService {
                 .content(post.getContent())
                 .build();
     }
-
     public List<PostResponse> getList(PostSearch postSearch) {
-//        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
-
         return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
-
     @Transactional
     public PostResponse edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
@@ -93,17 +61,9 @@ public class PostService {
 
         post.edit(postEditor);
 
-        // * 방법 2
-//        post.edit2(postEdit.getTitle(), postEdit.getContent());
-        // * 방법 2 (null 허용 상황)
-        /*post.edit2(
-                postEdit.getTitle() != null ? postEdit.getTitle() : post.getTitle()
-                ,postEdit.getContent() != null ? postEdit.getContent() : post.getContent());*/
-
         // * responseBody 전달하려고 함.
         return new PostResponse(post);
     }
-
     public void delete(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);

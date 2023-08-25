@@ -13,12 +13,9 @@ public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String accessToken;
-
     @ManyToOne()
     private Member member;
-
     @Builder
     public Session(Member member) {
         this.accessToken = UUID.randomUUID().toString();

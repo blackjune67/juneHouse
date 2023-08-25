@@ -20,7 +20,6 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ErrorResponse MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-//        ErrorResponse errorResponse = new ErrorResponse("400", "잘못된 요청입니다.");
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message("잘못된 요청입니다.")
@@ -32,10 +31,7 @@ public class ExceptionController {
         return errorResponse;
     }
 
-    /*Map<String, String> response = new HashMap<>();
-    response.put(field, defaultMessage);*/
     @ResponseBody
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(JuneTopException.class)
     public ResponseEntity<ErrorResponse> PostNotFound(JuneTopException e) {
         ErrorResponse body = ErrorResponse.builder()
@@ -44,12 +40,6 @@ public class ExceptionController {
                 .validation(e
                         .getValidation())
                 .build();
-
-        /*if (e instanceof InvalidRequest) {
-            InvalidRequest invalidRequest = (InvalidRequest) e;
-            body.addValidation(invalidRequest.getFieldName(), invalidRequest.getFieldMessage());
-        }*/
-
         return ResponseEntity.status(Integer.parseInt(e.getStatusCode())).body(body);
     }
 }

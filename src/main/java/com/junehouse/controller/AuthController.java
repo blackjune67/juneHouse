@@ -26,7 +26,6 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public SessionResponse login(@RequestBody Login login) {
-//        String accessToken = String.valueOf(authService.signin(login));
         Long memberId = authService.signin(login);
 
         Calendar cal = Calendar.getInstance();
@@ -34,9 +33,6 @@ public class AuthController {
         cal.add(Calendar.HOUR,1); //만료일 1시간
 
         // * JWT 인증
-//        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // ! HS256 key 값을 고정하도록 변경
-//        String secretString = Encoders.BASE64.encode(key.getEncoded());
-//        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.decodeBase64(appConfig.getJwtKey()));
         SecretKey secretKey = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
         String jws = Jwts.builder()
@@ -45,22 +41,6 @@ public class AuthController {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(cal.getTimeInMillis()))
                 .compact();
-
-        /*ResponseCookie responseCookie = ResponseCookie.from("SESSION", accessToken)
-                .domain("localhost") // todo 서버 환경에 따른 분리 필요
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(Duration.ofDays(30))
-                .sameSite("Strict")
-                .build();
-
-        log.info("==> cookie={}", responseCookie.toString());*/
-
-        /*return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .build();*/
-//        return jws;
         return new SessionResponse(jws);
     }
 

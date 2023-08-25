@@ -16,16 +16,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
     private final MemberRepository memberRepository;
-
     // * 로그인
     @Transactional
     public Long signin(Login login) {
-        /*Member member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(InvalidSign::new);*/
-//        Session session = member.addSession();
-//        return session.getAccessToken();
         Member member = memberRepository.findByEmail(login.getEmail())
                 .orElseThrow(InvalidSign::new);
 

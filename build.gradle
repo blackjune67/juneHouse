@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.8'
+    id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.juneHouse'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '18'
 
 configurations {
     compileOnly {
@@ -40,19 +40,17 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto'
     // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-
-
-
+    
     // Querydsl 추가 시작
-    implementation 'com.querydsl:querydsl-core'
-    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 
     // yml 파일 custom 설정 매핑
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
@@ -60,8 +58,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    // REST DOC
+    asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:3.0.0"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0"
 }
 
 tasks.named('test') {

@@ -11,6 +11,7 @@ public abstract class JuneTopException extends RuntimeException {
     public JuneTopException(String message) {
         super(message);
     }
+    // * 생성자 오버로딩
     public JuneTopException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -1,6 +1,5 @@
 package com.junehouse.service;
 
-import com.junehouse.crypto.PasswordEncoder;
 import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.repository.MemberRepository;

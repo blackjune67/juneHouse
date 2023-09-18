@@ -1,11 +1,11 @@
 package com.junehouse.service;
 
-import com.junehouse.crypto.PasswordEncoder;
 import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.repository.MemberRepository;
 import com.junehouse.request.Signup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,7 +24,8 @@ public class AuthService {
         }
 
 //        PasswordEncoder passwordEncoder = new PasswordEncoder();
-        String encodePassword = passwordEncoder.encrypt(signup.getPassword());
+//        String encodePassword = passwordEncoder.encrypt(signup.getPassword());
+        String encodePassword = passwordEncoder.encode(signup.getPassword());
 
         Member member = Member.builder()
                 .name(signup.getName())

@@ -4,6 +4,7 @@ import com.junehouse.domain.Member;
 import com.junehouse.exception.AlreadyExistsEmailException;
 import com.junehouse.repository.MemberRepository;
 import com.junehouse.request.Signup;
+import com.junehouse.response.AuthResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     // * 회원가입
-    public void signup(Signup signup) {
+    public AuthResponse signup(Signup signup) {
         Optional<Member> memberOptional = memberRepository.findByEmail(signup.getEmail());
         if(memberOptional.isPresent()) {
             throw new AlreadyExistsEmailException();
@@ -34,5 +35,9 @@ public class AuthService {
                 .build();
 
         memberRepository.save(member);
+        return AuthResponse.builder()
+                .email(member.getEmail())
+                .message("회원가입을 축하합니다!")
+                .build();
     }
 }

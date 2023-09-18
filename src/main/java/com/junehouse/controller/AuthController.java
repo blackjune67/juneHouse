@@ -2,6 +2,7 @@ package com.junehouse.controller;
 
 import com.junehouse.config.AppConfig;
 import com.junehouse.request.Signup;
+import com.junehouse.response.AuthResponse;
 import com.junehouse.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public void signup(@RequestBody Signup signup) {
-        authService.signup(signup);
+    public AuthResponse signup(@RequestBody Signup signup) {
+//        authService.signup(signup);
+        return authService.signup(signup);
     }
 }

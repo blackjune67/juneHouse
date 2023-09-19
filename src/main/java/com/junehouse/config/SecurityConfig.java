@@ -1,7 +1,14 @@
 package com.junehouse.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.config.handler.Http401Handler;
+import com.junehouse.config.handler.Http403Handler;
+import com.junehouse.config.handler.LoginFailHandler;
+import com.junehouse.config.handler.SuccessHandler;
 import com.junehouse.domain.Member;
 import com.junehouse.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +21,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -33,9 +43,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/signup").permitAll()
-                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/user").hasAnyRole("USER")
+                .requestMatchers("/admin").hasAnyRole("ADMIN")
+//                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
 //                .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/admin").access(new WebExpressionAuthorizationManager("hasRole('ADMIN') AND hasAuthority('WRITE')"))
+//                .requestMatchers("/admin").access(new WebExpressionAuthorizationManager("hasRole('ADMIN') AND hasAuthority('WRITE')"))
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -44,7 +56,13 @@ public class SecurityConfig {
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .defaultSuccessUrl("/")
+                .successHandler(new SuccessHandler(objectMapper))
+                .failureHandler(new LoginFailHandler(objectMapper))
                 .and()
+                .exceptionHandling(e -> {
+                    e.accessDeniedHandler(new Http403Handler(objectMapper));
+                    e.authenticationEntryPoint(new Http401Handler(objectMapper));
+                })
                 .rememberMe(rm -> rm.rememberMeParameter("remember")
                         .alwaysRemember(false)
                         .tokenValiditySeconds(2592000)

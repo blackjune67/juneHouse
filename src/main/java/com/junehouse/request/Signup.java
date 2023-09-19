@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Signup {
-    private String email;
     private String name;
+    private String email;
     private String password;
     @Builder
     public Signup(String email, String name, String password) {

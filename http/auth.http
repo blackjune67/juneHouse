@@ -3,7 +3,7 @@
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=june&password=a1234
+username=fnffn0607@naver.com&password=a1234
 
 ### 인증 페이지 요청
 

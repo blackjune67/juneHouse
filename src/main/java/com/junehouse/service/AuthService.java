@@ -36,6 +36,7 @@ public class AuthService {
 
         memberRepository.save(member);
         return AuthResponse.builder()
+                .code("200")
                 .email(member.getEmail())
                 .message("회원가입을 축하합니다!")
                 .build();

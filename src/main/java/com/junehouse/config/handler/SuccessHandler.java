@@ -26,6 +26,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         clearAuthenticationAttributes(request);
 
+        // * SecurityContextHolder 에서 정보를 갖고 옴.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getName();
 
         AuthResponse authResponse = AuthResponse

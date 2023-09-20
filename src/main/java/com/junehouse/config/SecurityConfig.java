@@ -1,10 +1,10 @@
 package com.junehouse.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.config.filter.EmailPasswordAuthFilter;
 import com.junehouse.config.handler.Http401Handler;
 import com.junehouse.config.handler.Http403Handler;
 import com.junehouse.config.handler.LoginFailHandler;
-import com.junehouse.config.handler.SuccessHandler;
 import com.junehouse.domain.Member;
 import com.junehouse.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -21,14 +24,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity(debug = true)
-@Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -38,27 +46,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/signup").permitAll()
-                .requestMatchers("/user").hasAnyRole("USER")
-                .requestMatchers("/admin").hasAnyRole("ADMIN")
-//                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-//                .requestMatchers("/admin").hasRole("ADMIN")
-//                .requestMatchers("/admin").access(new WebExpressionAuthorizationManager("hasRole('ADMIN') AND hasAuthority('WRITE')"))
+                .requestMatchers("/user").hasRole("USER")
+                .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                    .loginPage("/auth/login")
-                    .loginProcessingUrl("/auth/login")
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .defaultSuccessUrl("/")
-                .successHandler(new SuccessHandler(objectMapper))
-                .failureHandler(new LoginFailHandler(objectMapper))
-                .and()
+                .addFilterBefore(emailPasswordAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> {
                     e.accessDeniedHandler(new Http403Handler(objectMapper));
                     e.authenticationEntryPoint(new Http401Handler(objectMapper));
@@ -69,6 +66,29 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService(memberRepository));
+        provider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(provider);
+    }
+
+    @Bean
+    public EmailPasswordAuthFilter emailPasswordAuthFilter() {
+        EmailPasswordAuthFilter emailPasswordAuthFilter = new EmailPasswordAuthFilter(objectMapper);
+        emailPasswordAuthFilter.setAuthenticationManager(authenticationManager());
+        emailPasswordAuthFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+        emailPasswordAuthFilter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));
+        emailPasswordAuthFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+
+        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+        rememberMeServices.setAlwaysRemember(true);
+        rememberMeServices.setValiditySeconds(3600 * 24 * 30); // * 한달 세션
+        emailPasswordAuthFilter.setRememberMeServices(rememberMeServices);
+        return emailPasswordAuthFilter;
     }
 
     @Bean

@@ -1,6 +1,5 @@
 package com.junehouse.controller;
 
-import com.junehouse.config.AppConfig;
 import com.junehouse.request.Signup;
 import com.junehouse.response.AuthResponse;
 import com.junehouse.service.AuthService;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final AppConfig appConfig;
+//    private final AppConfig appConfig;
 
     @GetMapping("/auth/login")
     public String login() {

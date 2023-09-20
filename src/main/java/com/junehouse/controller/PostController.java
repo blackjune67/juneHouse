@@ -8,6 +8,7 @@ import com.junehouse.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class PostController {
     private final PostService postService;
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
+    @PostAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
         // * CASE_1 : 저장한 데이터 Entity -> response로 응답하기
@@ -41,11 +43,13 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
+    @PostAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/posts/{postId}")
     public PostResponse edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
         return postService.edit(postId, request);
     }
 
+    @PostAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);

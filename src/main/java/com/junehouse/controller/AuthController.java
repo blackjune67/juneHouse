@@ -17,6 +17,7 @@ public class AuthController {
     private final AuthService authService;
 //    private final AppConfig appConfig;
 
+    // * 추후 vue or react
     @GetMapping("/auth/login")
     public String login() {
         return "로그인 페이지";

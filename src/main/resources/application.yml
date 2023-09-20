@@ -28,9 +28,6 @@ spring:
 logging:
   level:
     org:
-      springframework:
-        core:
-          LocalVariableTableParameterNameDiscoverer: error
       hibernate:
         type:
           descriptor:

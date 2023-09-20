@@ -1,6 +1,7 @@
 package com.junehouse.config.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.config.UserPrincipal;
 import com.junehouse.response.AuthResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -24,23 +24,27 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String username = userPrincipal.getUsername();
+
+        log.info("[로그인 성공] user={}", username);
+
         clearAuthenticationAttributes(request);
 
         // * SecurityContextHolder 에서 정보를 갖고 옴.
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getName();
 
         AuthResponse authResponse = AuthResponse
                 .builder()
                 .code("200")
-                .email(principal.toString())
-                .message(principal + " 님이 로그인에 성공했습니다.")
+                .email(username)
+                .message(username + " 님이 로그인에 성공했습니다.")
                 .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setStatus(HttpServletResponse.SC_OK);
         objectMapper.writeValue(response.getWriter(), authResponse);
-
     }
 
     // * 로그인 실패 시 session에 남아있는 실패 이력 제거

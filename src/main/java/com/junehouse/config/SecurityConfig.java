@@ -51,11 +51,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/login").permitAll()
-                .requestMatchers("/auth/signup").permitAll()
+//                .requestMatchers("/auth/login").permitAll()
+//                .requestMatchers("/auth/signup").permitAll()
                 /*.requestMatchers("/user").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")*/
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(emailPasswordAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> {

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -57,6 +58,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
@@ -82,6 +84,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 title값 필수!")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test2() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
@@ -103,6 +106,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test3() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
@@ -177,6 +181,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 수정")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test6() throws Exception {
         //given
         Post post = Post.builder()
@@ -201,6 +206,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 삭제")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test7() throws Exception {
         //given
         Post post = Post.builder()
@@ -222,7 +228,7 @@ class PostControllerTest {
     void test8() throws Exception {
 
         // expected
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -231,6 +237,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 게시글 수정")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test9() throws Exception {
 
         PostEdit postEdit = PostEdit.builder()
@@ -248,6 +255,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("게시글 제목 바보 안됨")
+    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test10() throws Exception {
         // given
         PostCreate request = PostCreate.builder()

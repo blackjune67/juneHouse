@@ -3,6 +3,8 @@ package com.junehouse.service;
 import com.junehouse.domain.Post;
 import com.junehouse.domain.PostEditor;
 import com.junehouse.exception.PostNotFound;
+import com.junehouse.exception.UserNotFound;
+import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
@@ -21,9 +23,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+
     // * CASE_3 : 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 관리함.
-    public void write(PostCreate postCreate) {
+    public void write(Long userId, PostCreate postCreate) {
+        var member = memberRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
+
         Post post = Post.builder()
+                .member(member)
                 .title(postCreate.title)
                 .content(postCreate.content)
                 .build();

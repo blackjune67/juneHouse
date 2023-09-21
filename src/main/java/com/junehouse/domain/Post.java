@@ -20,9 +20,10 @@ public class Post {
     private Member member;
 
     @Builder
-    public Post(String title, String content) {
+    public Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;
+        this.member = member;
     }
     // * 방법 1
     public PostEditor.PostEditorBuilder toEditor() {
@@ -38,5 +39,9 @@ public class Post {
     public void edit2(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public Long getMemberId() {
+        return this.member.getId();
     }
 }

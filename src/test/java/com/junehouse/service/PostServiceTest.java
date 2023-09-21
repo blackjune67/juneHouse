@@ -1,7 +1,9 @@
 package com.junehouse.service;
 
+import com.junehouse.domain.Member;
 import com.junehouse.domain.Post;
 import com.junehouse.exception.PostNotFound;
+import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
@@ -23,28 +25,36 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class PostServiceTest {
-
     @Autowired
     private PostService postService;
-
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void clean() {
         postRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     public void test1() {
         // given
+        var user = Member.builder()
+                .name("june")
+                .email("fnffn0607@naver.com")
+                .password("a1234")
+                .build();
+        memberRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         // when
-        postService.write(postCreate);
+        postService.write(user.getId(), postCreate);
 
         //then
         assertEquals(1L, postRepository.count());

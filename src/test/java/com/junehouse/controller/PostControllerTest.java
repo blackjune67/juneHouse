@@ -1,12 +1,15 @@
 package com.junehouse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.config.CustomAnnotation;
+import com.junehouse.domain.Member;
 import com.junehouse.domain.Post;
+import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
 import com.junehouse.request.PostEdit;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +44,15 @@ class PostControllerTest {
     private PostRepository postRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @BeforeEach
+    @AfterEach
     void clean() {
         postRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     // * MockMVC 한글 깨짐 처리
@@ -58,7 +65,8 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청")
-    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+//    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+    @CustomAnnotation()
     void test() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
@@ -106,7 +114,8 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
-    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+//    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+    @CustomAnnotation()
     void test3() throws Exception {
         //given
         PostCreate request = PostCreate.builder()
@@ -137,9 +146,18 @@ class PostControllerTest {
     @DisplayName("글 1개 조회")
     void test4() throws Exception {
         //given
+        Member member = Member
+                .builder()
+                .name("최하준")
+                .email("fnffn0506@naver.com")
+                .password("a1234")
+                .build();
+        memberRepository.save(member);
+
         Post post = Post.builder()
                 .title("1234567891")
                 .content("bar")
+                .member(member)
                 .build();
         postRepository.save(post);
 
@@ -155,18 +173,28 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 여러개 조회")
+    @CustomAnnotation
     void test5() throws Exception {
         //given
+        Member member = Member.builder()
+                .name("최하준")
+                .email("fnffn0506@naver.com")
+                .password("a1234")
+                .build();
+        memberRepository.save(member);
+
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i ->
                         Post.builder()
                                 .title("글쓰기 테스트 " + i)
                                 .content("재밌는 내용 " + i)
+                                .member(member)
                                 .build())
                 .collect(Collectors.toList());
+
         postRepository.saveAll(requestPosts);
         //when + then
-        mockMvc.perform(get("/posts?page=1&size=10")
+        mockMvc.perform(get("/posts?page=0&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(10)))
@@ -181,12 +209,16 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 수정")
-    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+    @CustomAnnotation
+//    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
     void test6() throws Exception {
+        Member member = memberRepository.findAll().get(0);
+
         //given
         Post post = Post.builder()
                 .title("아이폰")
                 .content("애플")
+                .member(member)
                 .build();
         postRepository.save(post);
 
@@ -206,12 +238,16 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 삭제")
-    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+//    @WithMockUser(username = "fnffn0607@naver.com", roles = {"ADMIN", "USER"})
+    @CustomAnnotation
     void test7() throws Exception {
         //given
+        Member member = memberRepository.findAll().get(0);
+
         Post post = Post.builder()
                 .title("아이폰")
                 .content("애플")
+                .member(member)
                 .build();
         postRepository.save(post);
 

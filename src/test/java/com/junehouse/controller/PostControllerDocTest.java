@@ -1,9 +1,12 @@
 package com.junehouse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junehouse.config.CustomAnnotation;
 import com.junehouse.domain.Post;
+import com.junehouse.repository.MemberRepository;
 import com.junehouse.repository.PostRepository;
 import com.junehouse.request.PostCreate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +38,15 @@ public class PostControllerDocTest {
     private PostRepository postRepository;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @AfterEach
+    void clean() {
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
 
     /*@BeforeEach
     public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
@@ -70,6 +82,7 @@ public class PostControllerDocTest {
 
     @Test
     @DisplayName("글 등록")
+    @CustomAnnotation
     void test2() throws Exception {
         PostCreate request = PostCreate.builder()
                 .title("글 등록 테스트")

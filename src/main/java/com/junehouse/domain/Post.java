@@ -15,6 +15,10 @@ public class Post {
     private String title;
     @Lob
     private String content;
+    @ManyToOne
+    @JoinColumn
+    private Member member;
+
     @Builder
     public Post(String title, String content) {
         this.title = title;

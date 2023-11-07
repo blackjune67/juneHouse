@@ -42,9 +42,9 @@ class AuthControllerTest {
     void test06() throws Exception {
         // * 회원가입 회원
         Signup signup = Signup.builder()
-                .email("june@kakao.com")
+                .email("fnffn0607@naver.com")
                 .password("a1234")
-                .name("최하하")
+                .name("최하준")
                 .build();
 
         mockMvc.perform(post("/auth/signup")

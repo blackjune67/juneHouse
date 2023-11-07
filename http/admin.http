@@ -3,8 +3,8 @@ POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
 {
-  "name": "june",
-  "email": "fnffn0607@naver.com",
+  "name": "최댕댕",
+  "email": "buea486@gmail.com",
   "password": "a1234"
 }
 

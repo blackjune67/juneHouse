@@ -6,19 +6,19 @@ JUNEHOUSE
 
 ### * 기술 스택
     -  백엔드 스택
-        - JAVA 11
-        - SpringBoot 2.7.8
-        - JPA
-        - Lombok
-        - h2
-        - MariaDB
+        ↪︎ JAVA 11
+        ↪︎ SpringBoot 2.7.8
+        ↪︎ JPA
+        ↪︎ Lombok
+        ↪︎ h2
+        ↪︎ MariaDB
 
     - 프론트 스택
-        - Vue3 (추후 변경 예정)
+        ↪︎ Vue3 (추후 변경 예정)
 
     - 배포 스택
-        - AWS (GCP로 전환 가능)
-        - 개인서버
+        ↪︎ AWS (GCP로 전환 가능)
+        ↪︎ 개인서버
         
 ### * 프로젝트를 하면서 기대하는 것
     - JAVA 8 이후의 추가된 문법 활용을 통한 학습

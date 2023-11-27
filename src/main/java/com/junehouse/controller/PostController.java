@@ -14,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -23,6 +25,29 @@ public class PostController {
     // SSR => jsp, thymeleaf
     // SPA => vue + SSR = nuxt.js, react + SSR = next.js
     private final PostService postService;
+
+    @GetMapping("/user_info")
+    public Map<String, Object> getUser() {
+        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>();
+        HashMap<String, Object> user = new HashMap<>();
+
+        data.put("email", "bbaa22@naver.com");
+        data.put("phone", "15290788137");
+        data.put("username", "bbaa22@naver.com");
+        data.put("id", "601d85900f43923hffbcs");
+        data.put("token", "4v8acea-6a89-2a2ebc-10802-9ac19003");
+
+        user.put("language", "en");
+        user.put("user", data);
+
+        map.put("error", 0);
+        map.put("msg", "OK");
+//        map.put("data", user);
+
+        log.info("getUser");
+        return map;
+    }
 
     // * GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     @PostAuthorize("hasRole('ROLE_ADMIN')")

@@ -20,6 +20,8 @@ public class AuthController {
     // * 추후 vue or react
     @GetMapping("/auth/login")
     public String login() {
+        System.out.println("==> login!!!!");
+        log.info("==> 로그인 ");
         return "로그인 페이지";
     }
 

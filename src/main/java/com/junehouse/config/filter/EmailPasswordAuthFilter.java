@@ -1,6 +1,7 @@
 package com.junehouse.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +23,14 @@ public class EmailPasswordAuthFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        EmailPassword emailPassword = objectMapper.readValue(request.getInputStream(), EmailPassword.class);
+        EmailPassword emailPassword = null;
+
+        try {
+            emailPassword = objectMapper.readValue(request.getInputStream(), EmailPassword.class);
+        } catch (MismatchedInputException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JSON 데이터가 없거나 비어있습니다.");
+            return null;
+        }
 
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 emailPassword.email,
@@ -37,6 +45,8 @@ public class EmailPasswordAuthFilter extends AbstractAuthenticationProcessingFil
     private static class EmailPassword {
         private String email;
         private String password;
+        public EmailPassword() {
+        }
     }
 }
 

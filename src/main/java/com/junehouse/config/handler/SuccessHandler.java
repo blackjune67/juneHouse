@@ -33,9 +33,22 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
         // * SecurityContextHolder 에서 정보를 갖고 옴.
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getName();
+        AuthResponse.UserData userData = new AuthResponse.UserData(
+                "bbaa22@naver.com",
+                "15290788137",
+                username,
+                "601d85900f43923hffbcs",
+                "4v8acea-6a89-2a2ebc-10802-9ac19003"
+        );
+
+        AuthResponse.User user = new AuthResponse.User("en", userData);
 
         AuthResponse authResponse = AuthResponse
                 .builder()
+                .data(user)
+                .language("en")
+                .error(0)
+                .msg("OK")
                 .code("200")
                 .email(username)
                 .message(username + " 님이 로그인에 성공했습니다.")
